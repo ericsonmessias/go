@@ -1,0 +1,19 @@
+FROM golang:1.22.2 AS builder
+
+WORKDIR /go/src/desafio
+
+COPY ./[^Dockerfile]* .
+
+RUN go mod init desafio
+
+RUN go build
+
+#RUN GOOS=linux go build -ldflags="-s -w"
+
+FROM golang:1.22.2-alpine
+
+WORKDIR /go/src/desafio
+
+COPY --from=builder /go/src/desafio .
+
+CMD ["./desafio"]
